@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+ext{
+    litepal_version = "1.5.1"
+    gson_version = "2.8.1"
+    glide_version = "4.0.0-RC0"
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -20,10 +26,17 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
+    // 操作数据库
+    compile "org.litepal.android:core:$litepal_version"
+    // 解析json
+    compile "com.google.code.gson:gson:$gson_version"
+    // 图片加载
+    compile "com.github.bumptech.glide:glide:$glide_version"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
 }
