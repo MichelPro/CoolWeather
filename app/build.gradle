@@ -1,10 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-ext{
+ext {
+    okhttputils_version = "2.6.2"
     litepal_version = "1.5.1"
     gson_version = "2.8.1"
     glide_version = "4.0.0-RC0"
+    androidlib_version = "0.0.7"
+    anko_version = "0.10.1"
 }
 
 android {
@@ -31,8 +34,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
+    // 网络请求
+    compile "com.zhy:okhttputils:$okhttputils_version"
     // 操作数据库
     compile "org.litepal.android:core:$litepal_version"
     // 解析json
@@ -42,6 +45,13 @@ dependencies {
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    // Michel库
+    compile "com.michel:android-lib:$androidlib_version"
+    // Anko Commons
+    compile "org.jetbrains.anko:anko:$anko_version"
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    testCompile 'junit:junit:4.12'
 }
 repositories {
     mavenCentral()

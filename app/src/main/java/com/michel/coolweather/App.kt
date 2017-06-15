@@ -2,6 +2,11 @@ package com.michel.coolweather
 
 import android.app.Application
 import org.litepal.LitePal
+import com.zhy.http.okhttp.OkHttpUtils
+import com.zhy.http.okhttp.log.LoggerInterceptor
+import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
+
 
 /**
  * Created by Michel on 2017/6/13.
@@ -11,6 +16,8 @@ class App: Application(){
     override fun onCreate() {
         super.onCreate()
         initLitePal()
+
+        initOkHttpUtil()
     }
 
     /**
@@ -18,5 +25,16 @@ class App: Application(){
      */
     private fun initLitePal() {
         LitePal.initialize(this)
+    }
+
+    private fun initOkHttpUtil() {
+        val okHttpClient = OkHttpClient.Builder()
+                .addInterceptor(LoggerInterceptor("TAG"))
+                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                //其他配置
+                .build()
+
+        OkHttpUtils.initClient(okHttpClient)
     }
 }
