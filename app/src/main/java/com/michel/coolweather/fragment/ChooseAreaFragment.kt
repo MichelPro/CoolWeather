@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.michel.coolweather.R
+import com.michel.coolweather.activity.WeatherActivity
 import com.michel.coolweather.base.BaseFragment
 import com.michel.coolweather.entity.City
 import com.michel.coolweather.entity.County
@@ -16,6 +17,7 @@ import com.zhy.http.okhttp.OkHttpUtils
 import com.zhy.http.okhttp.callback.StringCallback
 import okhttp3.Call
 import org.jetbrains.anko.find
+import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
 import org.litepal.crud.DataSupport
 import java.lang.Exception
@@ -75,6 +77,11 @@ class ChooseAreaFragment : BaseFragment() {
                     selectedCity = cityList[position]
                     // 当前为市，跳转到县
                     queryCounty()
+                }
+                LEVEL_COUNTY -> {
+                    val weatherId = countyList[position].weatherId
+                    startActivity<WeatherActivity>("weather_id" to weatherId)
+                    activity.finish()
                 }
             }
         }

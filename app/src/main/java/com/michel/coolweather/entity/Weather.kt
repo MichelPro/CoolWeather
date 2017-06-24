@@ -11,7 +11,7 @@ data class Weather(
 
         var basic: Basic,
 
-        var aqi: AQI,
+        var aqi: AQI?,
 
         var now: Now,
 

@@ -1,6 +1,7 @@
 package com.michel.coolweather
 
 import android.app.Application
+import android.content.Context
 import org.litepal.LitePal
 import com.zhy.http.okhttp.OkHttpUtils
 import com.zhy.http.okhttp.log.LoggerInterceptor
@@ -13,8 +14,17 @@ import java.util.concurrent.TimeUnit
  */
 class App: Application(){
 
+    companion object{
+        lateinit var context: Context
+
+        fun getAppContext(): Context = context
+    }
+
     override fun onCreate() {
         super.onCreate()
+
+        context = this
+
         initLitePal()
 
         initOkHttpUtil()

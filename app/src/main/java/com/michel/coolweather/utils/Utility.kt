@@ -1,12 +1,15 @@
 package com.michel.coolweather.utils
 
 import android.text.TextUtils
+import com.google.gson.Gson
 import com.michel.coolweather.entity.City
 import com.michel.coolweather.entity.County
 import com.michel.coolweather.entity.Province
+import com.michel.coolweather.entity.Weather
 import com.michel.coolweather.other.iterator
 import org.json.JSONArray
 import org.json.JSONException
+import org.json.JSONObject
 
 /**
  * 解析处理服务器返回的地域信息
@@ -15,6 +18,14 @@ import org.json.JSONException
 class Utility {
 
     companion object{
+
+        /**
+         * 将返回的JSON数据解析成weather实体类
+         */
+        fun handleWeatherResponse(response: String): Weather{
+            val weatherContent = JSONObject(response).getJSONArray("HeWeather").getJSONObject(0).toString()
+            return Gson().fromJson(weatherContent, Weather::class.java)
+        }
 
         /**
          * 解析和处理服务器返回的省级数据
