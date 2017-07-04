@@ -1,12 +1,18 @@
 package com.michel.coolweather.activity
 
 
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.michel.coolweather.R
 import com.michel.coolweather.base.BaseActivity
 import com.michel.coolweather.entity.Weather
@@ -25,6 +31,7 @@ import java.lang.Exception
 
 class WeatherActivity : BaseActivity(), AnkoLogger {
 
+    lateinit var bingPicImg: ImageView
     lateinit var weatherLayout: ScrollView
     lateinit var titleCity: TextView
     lateinit var titleUpdateTime: TextView
@@ -38,6 +45,15 @@ class WeatherActivity : BaseActivity(), AnkoLogger {
     lateinit var sportText: TextView
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // 透明状态栏
+        if (Build.VERSION.SDK_INT >= 21) {
+            val decorView = window.decorView
+            decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            window.statusBarColor = Color.TRANSPARENT
+        }
+        super.onCreate(savedInstanceState)
+    }
 
     override fun initVariables() {    }
 
@@ -45,6 +61,7 @@ class WeatherActivity : BaseActivity(), AnkoLogger {
 
 
     override fun initViews(savedInstanceState: Bundle?) {
+        bingPicImg = find(R.id.bing_pic_img)
         weatherLayout = find(R.id.weather_layout)
         titleCity = find(R.id.title_city)
         titleUpdateTime = find(R.id.title_update_time)
@@ -59,6 +76,12 @@ class WeatherActivity : BaseActivity(), AnkoLogger {
     }
 
     override fun initData() {
+        val bingPic = SpUtils.instance.get("bing_pic", "") as String
+        if (bingPic.isNotEmpty()) {
+            Glide.with(this).load(bingPic).into(bingPicImg)
+        } else {
+            loadBingPic()
+        }
 
         val weatherString = SpUtils.instance.get("weather", "") as String
         if (weatherString.isNotEmpty()) {
@@ -68,10 +91,28 @@ class WeatherActivity : BaseActivity(), AnkoLogger {
         } else {
             // 无缓存时去服务器查询天气
             val weatherId = intent.getStringExtra("weather_id")
+            Log.d("CoolWeather", "weather_id是$weatherId")
             weatherLayout.setVisible(false)
             requestWeather(weatherId)
 
         }
+    }
+
+    /**
+     * 加载必应每日一图
+     */
+    private fun loadBingPic() {
+        OkHttpUtils.get().url(Constant.URL_BING_PIC).build().execute(object : StringCallback(){
+            override fun onResponse(response: String, id: Int) {
+                SpUtils.instance.put("bing_pic", response)
+                Glide.with(this@WeatherActivity).load(response).into(bingPicImg)
+            }
+
+            override fun onError(call: Call?, e: Exception, id: Int) {
+                e.printStackTrace()
+            }
+
+        })
     }
 
     /**
@@ -82,7 +123,7 @@ class WeatherActivity : BaseActivity(), AnkoLogger {
                 .addParams("key", Constant.KEY_WEATHER)
                 .build().execute(object : StringCallback(){
             override fun onResponse(response: String, id: Int) {
-                debug("根据天气id请求天气信息结果是$response")
+                Log.d("CoolWeather", "返回结果是$response")
                 val weather = Utility.handleWeatherResponse(response)
                 if (weather != null && "ok" == weather.status) {
                     SpUtils.instance.put("weather", response)

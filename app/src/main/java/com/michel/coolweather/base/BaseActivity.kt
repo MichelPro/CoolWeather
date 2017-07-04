@@ -1,6 +1,9 @@
 package com.michel.coolweather.base
 
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.view.View
 import com.michel.intrastructure.activity.BaseActivity
 
 /**

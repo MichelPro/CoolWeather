@@ -11,6 +11,8 @@ interface Constant {
         // 查询天气API
         val URL_WEATHER = "http://guolin.tech/api/weather"
         // 查询天气KEY
-        val KEY_WEATHER = "bc0418b57b2d4918819d3974ac1285d9"
+        val KEY_WEATHER = "e40beffb07fc4a0b8c94a6cdb07041df"
+        // 获取必应每日一图
+        val URL_BING_PIC = "http://guolin.tech/api/bing_pic"
     }
 }
